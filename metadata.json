@@ -1,0 +1,7 @@
+{
+  "name": "Industrial Plastics Hub",
+  "description": "A high-performance portal for industrial plastic distribution, featuring a cut-to-size calculator, technical vault, and professional material selection support.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

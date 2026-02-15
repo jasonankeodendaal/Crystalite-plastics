@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industrial Plastics | Premium Engineered Materials</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-yellow: #FFD600; 
+      --industrial-bg: #111111;
+      --industrial-gray: #1a1a1a;
+      --border-radius: 12px;
+      --border-weight: 4px;
+      --accent-success: #22c55e;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--industrial-bg);
+      color: #ffffff;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    .safety-stripes {
+      background: repeating-linear-gradient(
+        45deg,
+        var(--primary-yellow),
+        var(--primary-yellow) 20px,
+        #000 20px,
+        #000 40px
+      );
+    }
+
+    .industrial-gradient {
+      background: linear-gradient(rgba(17, 17, 17, 0.85), rgba(17, 17, 17, 0.95)), url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=2000');
+      background-size: cover;
+      background-position: center;
+    }
+
+    ::selection {
+      background: var(--primary-yellow);
+      color: #000;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-yellow);
+    }
+
+    .view-transition {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .border-industrial {
+      border: var(--border-weight) solid var(--industrial-bg);
+    }
+    
+    .border-safety {
+      border: var(--border-weight) solid var(--primary-yellow);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Marquee Animation */
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marquee 20s linear infinite;
+    }
+
+    @keyframes marquee-slow {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee-slow {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marquee-slow 60s linear infinite;
+    }
+
+    /* Flashing Emergency Animation */
+    @keyframes emergency-flash {
+      0%, 100% { background-color: #ff0000; color: #ffffff; }
+      50% { background-color: #FFD600; color: #000000; }
+    }
+    .animate-emergency-flash {
+      animation: emergency-flash 1s step-end infinite;
+    }
+
+    #plexus-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    /* Industrial Card Flip/Fade */
+    .data-card-transition {
+      perspective: 1000px;
+    }
+    .data-card-inner {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .data-card-flipping {
+      transform: rotateY(10deg) scale(0.98);
+      filter: blur(1px);
+      opacity: 0.7;
+    }
+
+    @keyframes industrial-swipe {
+      0% { transform: translateX(20px); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    .animate-swipe {
+      animation: industrial-swipe 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* Accessibility focus state */
+    :focus {
+      outline: 2px solid var(--primary-yellow);
+      outline-offset: 2px;
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.45.0"
+  }
+}
+</script>
+</head>
+<body class="bg-[#111111] text-white">
+  <canvas id="plexus-canvas"></canvas>
+  <div id="root"></div>
+</body>
+</html>
