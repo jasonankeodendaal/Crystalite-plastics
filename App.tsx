@@ -220,7 +220,7 @@ const App: React.FC = () => {
               onBrowseClick={() => setView('catalog')} 
             />
             
-            <BrandCarousel brands={appState.brands} />
+            <BrandCarousel brands={appState.brands} config={appState.config.ui} />
 
             <FoundersSection config={appState.config.founders} />
 
@@ -237,7 +237,7 @@ const App: React.FC = () => {
             />
 
             {appState.config.posters && (
-              <BillboardSection posters={appState.config.posters} />
+              <BillboardSection posters={appState.config.posters} config={appState.config.ui} />
             )}
             
             <section className="relative h-[450px] sm:min-h-[600px] flex items-center overflow-hidden border-t border-white/5">
@@ -255,7 +255,7 @@ const App: React.FC = () => {
                
                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-20 w-full py-12 md:py-20">
                   <div className="max-w-xl bg-black/40 backdrop-blur-xl p-6 md:p-10 border-l-4 sm:border-l-8 border-[var(--primary-yellow)] rounded-r-[var(--border-radius)]">
-                    <span className="text-[var(--primary-yellow)] text-[9px] font-black uppercase tracking-[0.4em] mb-4 block">Fulfillment Grid</span>
+                    <span className="text-[var(--primary-yellow)] text-[9px] font-black uppercase tracking-[0.4em] mb-4 block">{appState.config.ui.logisticsLabel}</span>
                     <h2 className="text-3xl sm:text-6xl font-black uppercase mb-4 md:mb-6 leading-none tracking-tighter text-white">
                         {appState.config.ui.logisticsTitle} <br />
                         <span className="text-[var(--primary-yellow)]">{appState.config.ui.logisticsHighlight}</span>

@@ -265,6 +265,7 @@ export interface SiteConfig {
     subtitle: string;
     text: string;
     image: string;
+    roleLabel: string;
   };
   adverts?: AdvertItem[];
   posters?: PosterItem[];
@@ -289,6 +290,7 @@ export interface SiteConfig {
     logisticsTitle: string;
     logisticsHighlight: string;
     logisticsDesc: string;
+    logisticsLabel: string; // "Fulfillment Grid"
     logisticsImages: string[];
     branchDirectoryBtnText: string;
     modalCloseText: string;
@@ -316,6 +318,13 @@ export interface SiteConfig {
     formNoticeHeading: string;
     emergencyHeading: string;
     inquiryTypes: string[];
+    // Brand Carousel Labels
+    brandCarouselRegistryLabel: string;
+    brandCarouselCoordsLabel: string;
+    // Billboard Labels
+    billboardShowcaseLabel: string;
+    billboardAssetProtocolLabel: string;
+    billboardEnlargeLabel: string;
   };
   hero: {
     items: HeroItem[];

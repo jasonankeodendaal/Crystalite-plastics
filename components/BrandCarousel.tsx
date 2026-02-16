@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { Brand } from '../types';
+import { Brand, SiteConfig } from '../types';
 
 interface BrandCarouselProps {
   brands: Brand[];
+  config: SiteConfig['ui'];
 }
 
-const BrandCarousel: React.FC<BrandCarouselProps> = ({ brands }) => {
+const BrandCarousel: React.FC<BrandCarouselProps> = ({ brands, config }) => {
   if (!brands || brands.length === 0) return null;
 
   // Duplicate the brands array multiple times to ensure the marquee is full and seamless across all screen resolutions
@@ -17,7 +18,7 @@ const BrandCarousel: React.FC<BrandCarouselProps> = ({ brands }) => {
       {/* Decorative Technical ID - Establishes the "Protocol" aesthetic */}
       <div className="absolute top-3 left-6 z-20 pointer-events-none select-none">
         <span className="text-[8px] font-black uppercase tracking-[0.5em] text-slate-200">
-          PARTNER_REGISTRY // NODE_SCAN_ACTIVE
+          {config.brandCarouselRegistryLabel}
         </span>
       </div>
 
@@ -63,7 +64,7 @@ const BrandCarousel: React.FC<BrandCarouselProps> = ({ brands }) => {
       {/* Technical coordinate labels for corners */}
       <div className="absolute bottom-3 right-6 z-20 pointer-events-none select-none hidden sm:block">
         <span className="text-[8px] font-black uppercase tracking-[0.4em] text-slate-100">
-          LOGISTICS_FEED_01 // [34.0522° N, 118.2437° W]
+          {config.brandCarouselCoordsLabel}
         </span>
       </div>
     </section>

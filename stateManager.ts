@@ -179,7 +179,8 @@ const DEFAULT_STATE: AppState = {
       title: "Technical Excellence",
       subtitle: "Industry Authority since 1994",
       text: "Our core strategy is built on material reliability. We don't just supply stock; we provide the technical ecosystem required for high-stakes industrial production.",
-      image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800"
+      image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800",
+      roleLabel: "IP Executive Leadership"
     },
     adverts: DEFAULT_ADVERTS,
     posters: DEFAULT_POSTERS,
@@ -214,6 +215,7 @@ const DEFAULT_STATE: AppState = {
       logisticsTitle: 'National Footprint',
       logisticsHighlight: 'Logistics',
       logisticsDesc: 'Strategically distributed hubs in Isando, Paarden Eiland, and Pinetown ensure optimized dispatch for heavy hardware and high-volume vinyl orders.',
+      logisticsLabel: 'Fulfillment Grid',
       logisticsImages: [
         'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=2000',
         'https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&q=80&w=2000',
@@ -236,7 +238,12 @@ const DEFAULT_STATE: AppState = {
       qcLabel: 'QC PASS',
       formNoticeHeading: 'Technical Hub Notice',
       emergencyHeading: 'Hardware Breakdown',
-      inquiryTypes: ['Hardware Technical Support', 'Signage Media / Vinyl', 'Engineering Substrates', 'Technical Training']
+      inquiryTypes: ['Hardware Technical Support', 'Signage Media / Vinyl', 'Engineering Substrates', 'Technical Training'],
+      brandCarouselRegistryLabel: 'PARTNER_REGISTRY // NODE_SCAN_ACTIVE',
+      brandCarouselCoordsLabel: 'LOGISTICS_FEED_01 // [34.0522° N, 118.2437° W]',
+      billboardShowcaseLabel: 'Technical Showcase Matrix',
+      billboardAssetProtocolLabel: 'Asset_Protocol: V3.1 // High_Fidelity_View',
+      billboardEnlargeLabel: 'Click to enlarge technical asset'
     },
     hero: {
       items: DEFAULT_HERO,
@@ -304,32 +311,20 @@ const DEFAULT_STATE: AppState = {
   subscribers: []
 };
 
-// Deep merge utility to safely handle state migrations
-const deepMerge = (target: any, source: any) => {
-  for (const key of Object.keys(source)) {
-    if (source[key] instanceof Object && key in target) {
-      Object.assign(source[key], deepMerge(target[key], source[key]));
-    }
-  }
-  Object.assign(target || {}, source);
-  return target;
-};
-
 export const loadState = (): AppState => {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      // Ensure all top-level keys exist and merge with defaults to prevent crashes
       const state = { ...DEFAULT_STATE, ...parsed };
       state.config = { ...DEFAULT_STATE.config, ...parsed.config };
       
-      // Deep merge nested objects like theme, ui, etc.
       if (parsed.config) {
         state.config.theme = { ...DEFAULT_STATE.config.theme, ...parsed.config.theme };
         state.config.ui = { ...DEFAULT_STATE.config.ui, ...parsed.config.ui };
         state.config.newsletter = { ...DEFAULT_STATE.config.newsletter, ...parsed.config.newsletter };
         state.config.posters = parsed.config.posters || DEFAULT_STATE.config.posters;
+        state.config.founders = { ...DEFAULT_STATE.config.founders, ...parsed.config.founders };
       }
       
       return state;
@@ -400,7 +395,6 @@ export const addSubscriber = async (email: string) => {
   state.subscribers.unshift(newSubscriber);
   saveState(state);
   
-  // Optional: Also sync to Supabase if you have a subscribers table
   if (supabase) {
     try {
       await supabase.from('subscribers').insert([newSubscriber]);

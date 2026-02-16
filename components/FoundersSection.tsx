@@ -21,7 +21,7 @@ const FoundersSection: React.FC<FoundersSectionProps> = ({ config }) => {
             {/* Mobile floating label */}
             <div className="absolute bottom-4 left-4 z-20 md:hidden">
               <span className="bg-[var(--primary-yellow)] text-black px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-sm shadow-xl">
-                IP Executive Leadership
+                {config.roleLabel}
               </span>
             </div>
           </div>
@@ -41,7 +41,7 @@ const FoundersSection: React.FC<FoundersSectionProps> = ({ config }) => {
             </p>
             <div className="hidden md:flex items-center gap-6">
               <span className="w-20 h-2 bg-[var(--primary-yellow)]"></span>
-              <span className="text-[14px] font-black uppercase tracking-[0.2em] text-white">IP Executive Leadership</span>
+              <span className="text-[14px] font-black uppercase tracking-[0.2em] text-white">{config.roleLabel}</span>
             </div>
           </div>
         </div>

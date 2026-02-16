@@ -643,7 +643,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                 </div>
 
                 <div className="mt-16 p-10 bg-black/40 border border-white/5 rounded-[var(--border-radius)] flex flex-col md:flex-row items-center justify-between gap-8">
-                   <div className="max-w-2xl text-center md:text-left space-y-2">
+                   <div className="max-2xl text-center md:text-left space-y-2">
                       <h5 className="text-sm font-black uppercase text-white tracking-[0.2em]">Asset Quality Protocol</h5>
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">
                         Uploading assets outside of these recommended parameters may result in suboptimal hub visualization, including unwanted cropping, pixelation on retina displays, or layout distortion. Always verify master roll imagery and hardware visuals against this DNA specification registry.
@@ -743,6 +743,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                           <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Manifesto / Executive Summary</label>
                           <textarea className="w-full bg-black border border-white/10 p-4 text-sm text-slate-400 h-44 rounded-md focus:border-[var(--primary-yellow)] outline-none leading-relaxed" value={state.config.founders.text} onChange={e => updateConfig('founders.text', e.target.value)} />
                        </div>
+                       <div className="space-y-3">
+                          <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Executive Signature Role Label</label>
+                          <input className="w-full bg-black border border-white/10 p-4 text-sm text-white font-black rounded-md focus:border-[var(--primary-yellow)] outline-none" value={state.config.founders.roleLabel} onChange={e => updateConfig('founders.roleLabel', e.target.value)} />
+                       </div>
                        <div className="space-y-4">
                           <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Primary Visual Representative</label>
                           <div className="flex flex-col sm:flex-row gap-6">
@@ -766,6 +770,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                      </div>
                      <div className="bg-black/40 p-8 sm:p-12 space-y-8 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
                        <div className="space-y-3">
+                          <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Logistics Grid Label</label>
+                          <input className="w-full bg-black border border-white/10 p-4 text-sm text-[var(--primary-yellow)] font-black rounded-md outline-none" value={state.config.ui.logisticsLabel} onChange={e => updateConfig('ui.logisticsLabel', e.target.value)} />
+                       </div>
+                       <div className="space-y-3">
                           <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">National Registry Title</label>
                           <input className="w-full bg-black border border-white/10 p-4 text-sm text-white font-black rounded-md focus:border-[var(--primary-yellow)] outline-none" value={state.config.ui.logisticsTitle} onChange={e => updateConfig('ui.logisticsTitle', e.target.value)} />
                        </div>
@@ -785,6 +793,43 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                    </section>
                  </div>
 
+                 {/* DISTRIBUTION VAULTS & BRAND CAROUSEL Section */}
+                 <div className="mt-20 pt-16 border-t-2 border-white/5 grid lg:grid-cols-2 gap-16">
+                    <section className="space-y-10">
+                       <div className="flex items-center gap-4 mb-2">
+                          <div className="w-8 h-8 bg-blue-900 rounded-sm"></div>
+                          <h4 className="text-sm font-black uppercase text-slate-400 tracking-[0.2em]">Distribution Vaults Header</h4>
+                       </div>
+                       <div className="bg-black/40 p-8 sm:p-12 space-y-8 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
+                          <div className="space-y-3">
+                             <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Vault Main Title</label>
+                             <input className="w-full bg-black border border-white/10 p-4 text-sm text-white font-black rounded-md outline-none" value={state.config.ui.servicesTitle} onChange={e => updateConfig('ui.servicesTitle', e.target.value)} />
+                          </div>
+                          <div className="space-y-3">
+                             <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Since Label / Subtext</label>
+                             <input className="w-full bg-black border border-white/10 p-4 text-sm text-slate-400 rounded-md outline-none" value={state.config.ui.sinceLabel} onChange={e => updateConfig('ui.sinceLabel', e.target.value)} />
+                          </div>
+                       </div>
+                    </section>
+
+                    <section className="space-y-10">
+                       <div className="flex items-center gap-4 mb-2">
+                          <div className="w-8 h-8 bg-slate-100 rounded-sm"></div>
+                          <h4 className="text-sm font-black uppercase text-slate-400 tracking-[0.2em]">Partner Marquee Labels</h4>
+                       </div>
+                       <div className="bg-black/40 p-8 sm:p-12 space-y-8 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
+                          <div className="space-y-3">
+                             <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Registry Protocol Label</label>
+                             <input className="w-full bg-black border border-white/10 p-4 text-sm text-white font-black rounded-md outline-none" value={state.config.ui.brandCarouselRegistryLabel} onChange={e => updateConfig('ui.brandCarouselRegistryLabel', e.target.value)} />
+                          </div>
+                          <div className="space-y-3">
+                             <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Logistics Coords Label</label>
+                             <input className="w-full bg-black border border-white/10 p-4 text-sm text-slate-400 rounded-md outline-none" value={state.config.ui.brandCarouselCoordsLabel} onChange={e => updateConfig('ui.brandCarouselCoordsLabel', e.target.value)} />
+                          </div>
+                       </div>
+                    </section>
+                 </div>
+
                  {/* CONVERSION & ADVERTISING Section */}
                  <div className="mt-20 pt-16 border-t-2 border-white/5 space-y-20">
                     <SectionHeader title="Conversion & Broadcast Management" subtitle="Refine promotional assets and newsletter subscriber triggers" />
@@ -797,6 +842,20 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                              <h4 className="text-sm font-black uppercase text-slate-400 tracking-[0.2em]">Industrial Billboard Matrix</h4>
                           </div>
                           <div className="bg-black/40 p-8 sm:p-12 space-y-12 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
+                             <div className="grid md:grid-cols-3 gap-8">
+                                <div className="space-y-3">
+                                   <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Matrix Main Label</label>
+                                   <input className="w-full bg-black border border-white/10 p-4 text-sm text-white font-black rounded-md outline-none" value={state.config.ui.billboardShowcaseLabel} onChange={e => updateConfig('ui.billboardShowcaseLabel', e.target.value)} />
+                                </div>
+                                <div className="space-y-3">
+                                   <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Asset Protocol Label</label>
+                                   <input className="w-full bg-black border border-white/10 p-4 text-sm text-slate-400 rounded-md outline-none" value={state.config.ui.billboardAssetProtocolLabel} onChange={e => updateConfig('ui.billboardAssetProtocolLabel', e.target.value)} />
+                                </div>
+                                <div className="space-y-3">
+                                   <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Enlarge CTA Label</label>
+                                   <input className="w-full bg-black border border-white/10 p-4 text-sm text-slate-400 rounded-md outline-none" value={state.config.ui.billboardEnlargeLabel} onChange={e => updateConfig('ui.billboardEnlargeLabel', e.target.value)} />
+                                </div>
+                             </div>
                              <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-4">Manage the primary 3-row portrait poster visual showcase</p>
                              <div className="grid md:grid-cols-3 gap-8">
                                 {[0, 1, 2].map(idx => {
@@ -862,7 +921,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                                 <div className="space-y-8">
                                    <div className="space-y-3">
                                       <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Success State Headline</label>
-                                      <input className="w-full bg-black border border-white/10 p-4 text-sm text-green-500 font-black rounded-md outline-none" value={state.config.newsletter.successTitle} onChange={updateConfig.bind(null, 'newsletter.successTitle')} />
+                                      <input className="w-full bg-black border border-white/10 p-4 text-sm text-green-500 font-black rounded-md outline-none" value={state.config.newsletter.successTitle} onChange={e => updateConfig('newsletter.successTitle', e.target.value)} />
                                    </div>
                                    <div className="space-y-3">
                                       <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Success Confirmation Text</label>
