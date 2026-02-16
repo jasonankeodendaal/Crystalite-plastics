@@ -16,6 +16,7 @@ import BrandCarousel from './components/BrandCarousel';
 import PlexusBackground from './components/PlexusBackground';
 import AdvertStrip from './components/AdvertStrip';
 import NewsletterPopup from './components/NewsletterPopup';
+import BillboardSection from './components/BillboardSection';
 import { loadState, saveState, addInquiry, addSubscriber } from './stateManager';
 import { Material, AppState } from './types';
 
@@ -234,6 +235,10 @@ const App: React.FC = () => {
               onInquireClick={() => setView('contact')} 
               onNavigate={(v) => { setView(v); window.scrollTo(0,0); }}
             />
+
+            {appState.config.posters && (
+              <BillboardSection posters={appState.config.posters} />
+            )}
             
             <section className="relative h-[450px] sm:min-h-[600px] flex items-center overflow-hidden border-t border-white/5">
                {appState.config.ui.logisticsImages?.map((img, idx) => (

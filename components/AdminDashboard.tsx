@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AppState, Material, Inquiry, TechnicalDocument, SocialLink, MaterialMedia, Brand, Range, Series, MaterialDepartment, PricingType, RoadmapItem, DivisionConfig, Branch, HeroItem, NavItem, MaterialVariant, AdvertItem, Subscriber } from '../types';
+import { AppState, Material, Inquiry, TechnicalDocument, SocialLink, MaterialMedia, Brand, Range, Series, MaterialDepartment, PricingType, RoadmapItem, DivisionConfig, Branch, HeroItem, NavItem, MaterialVariant, AdvertItem, Subscriber, PosterItem } from '../types';
 
 interface AdminDashboardProps {
   state: AppState;
@@ -134,6 +134,20 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
       const newAdverts = [...(state.config.adverts || [])];
       newAdverts[idx].image = b64;
       updateConfig('adverts', newAdverts);
+    }
+  };
+
+  const handlePosterImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const b64 = await fileToBase64(file);
+      const newPosters = [...(state.config.posters || [])];
+      if (!newPosters[idx]) {
+        newPosters[idx] = { id: crypto.randomUUID(), image: b64, title: 'Poster Title' };
+      } else {
+        newPosters[idx].image = b64;
+      }
+      updateConfig('posters', newPosters);
     }
   };
 
@@ -466,6 +480,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
     { label: 'Home Hero Sequence', target: 'Homepage Slide', dimensions: '1920 x 1080 px', ratio: '16:9', notes: 'Maintain high contrast for readability' },
     { label: 'Logistics Grid', target: 'Landing Page Hub', dimensions: '2000 x 1200 px', ratio: '5:3', notes: 'Optimized for wide-format backgrounds' },
     { label: 'Advert Strip Items', target: 'Promo Banner', dimensions: '1600 x 400 px', ratio: '4:1', notes: 'Panoramic wide orientation' },
+    { label: 'Industrial Billboard Poster', target: 'Technical Showcase', dimensions: '800 x 1000 px', ratio: '4:5 (Portrait)', notes: 'Ultra-high res industrial visuals' },
     { label: 'Division Glyph / Icon', target: 'Service Nodes', dimensions: '128 x 128 px', ratio: '1:1', notes: 'Flat vector or high-res PNG' },
     { label: 'Division Hero Media', target: 'Category Landing', dimensions: '1920 x 800 px', ratio: '~21:9', notes: 'Wide cinematic feel' },
     { label: 'Partner Brand Logos', target: 'Marquee / About', dimensions: '600 x 300 px', ratio: '2:1', notes: 'Transparency is critical' },
@@ -775,6 +790,53 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                     <SectionHeader title="Conversion & Broadcast Management" subtitle="Refine promotional assets and newsletter subscriber triggers" />
                     
                     <div className="grid lg:grid-cols-1 gap-16">
+                       {/* Billboard Matrix Section */}
+                       <section className="space-y-10">
+                          <div className="flex items-center gap-4 mb-2">
+                             <div className="w-8 h-8 bg-yellow-600 rounded-sm"></div>
+                             <h4 className="text-sm font-black uppercase text-slate-400 tracking-[0.2em]">Industrial Billboard Matrix</h4>
+                          </div>
+                          <div className="bg-black/40 p-8 sm:p-12 space-y-12 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
+                             <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-4">Manage the primary 3-row portrait poster visual showcase</p>
+                             <div className="grid md:grid-cols-3 gap-8">
+                                {[0, 1, 2].map(idx => {
+                                  const poster = (state.config.posters || [])[idx];
+                                  return (
+                                    <div key={idx} className="bg-black/40 border border-white/10 rounded-md p-6 space-y-6">
+                                       <div className="aspect-[4/5] bg-black border border-white/10 relative overflow-hidden rounded">
+                                          {poster?.image ? (
+                                            <img src={poster.image} className="w-full h-full object-cover grayscale opacity-50" />
+                                          ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-[10px] font-black uppercase text-slate-800">No Asset</div>
+                                          )}
+                                          <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-sm">
+                                             <input type="file" id={`posterImage-${idx}`} className="hidden" onChange={e => handlePosterImageUpload(e, idx)} />
+                                             <button onClick={() => document.getElementById(`posterImage-${idx}`)?.click()} className="bg-white text-black px-6 py-2 text-[9px] font-black uppercase rounded shadow-lg">Upload Spec (800x1000)</button>
+                                          </div>
+                                       </div>
+                                       <div className="space-y-2">
+                                          <label className="text-[9px] font-black uppercase text-slate-600">Poster Headline 0{idx + 1}</label>
+                                          <input 
+                                            className="w-full bg-black border border-white/10 p-3 text-[11px] text-white font-black uppercase rounded outline-none" 
+                                            value={poster?.title || ''} 
+                                            onChange={e => {
+                                              const newPosters = [...(state.config.posters || [])];
+                                              if (newPosters[idx]) {
+                                                newPosters[idx].title = e.target.value;
+                                              } else {
+                                                newPosters[idx] = { id: crypto.randomUUID(), title: e.target.value, image: '' };
+                                              }
+                                              updateConfig('posters', newPosters);
+                                            }}
+                                          />
+                                       </div>
+                                    </div>
+                                  );
+                                })}
+                             </div>
+                          </div>
+                       </section>
+
                        {/* Newsletter Manager */}
                        <section className="space-y-10">
                           <div className="flex items-center gap-4 mb-2">
@@ -800,7 +862,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                                 <div className="space-y-8">
                                    <div className="space-y-3">
                                       <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Success State Headline</label>
-                                      <input className="w-full bg-black border border-white/10 p-4 text-sm text-green-500 font-black rounded-md outline-none" value={state.config.newsletter.successTitle} onChange={e => updateConfig('newsletter.successTitle', e.target.value)} />
+                                      <input className="w-full bg-black border border-white/10 p-4 text-sm text-green-500 font-black rounded-md outline-none" value={state.config.newsletter.successTitle} onChange={updateConfig.bind(null, 'newsletter.successTitle')} />
                                    </div>
                                    <div className="space-y-3">
                                       <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Success Confirmation Text</label>

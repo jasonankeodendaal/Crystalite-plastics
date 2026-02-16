@@ -1,5 +1,5 @@
 
-import { AppState, Inquiry, Material, HeroItem, Brand, Range, Series, MaterialDepartment, AdvertItem, NewsletterConfig, Subscriber } from './types';
+import { AppState, Inquiry, Material, HeroItem, Brand, Range, Series, MaterialDepartment, AdvertItem, NewsletterConfig, Subscriber, PosterItem } from './types';
 import { BRANCHES, MATERIALS } from './constants';
 import { supabase } from './services/supabase';
 
@@ -70,6 +70,12 @@ const DEFAULT_HERO: HeroItem[] = [
     button1Text: "Browse Rigid",
     button2Text: "Cut-to-Size"
   }
+];
+
+const DEFAULT_POSTERS: PosterItem[] = [
+  { id: 'p1', title: 'Precision Engineering', image: 'https://images.unsplash.com/photo-1504148455328-497c5efdf13a?auto=format&fit=crop&q=80&w=800' },
+  { id: 'p2', title: 'Material Innovation', image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800' },
+  { id: 'p3', title: 'National Logistics', image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800' }
 ];
 
 const DEFAULT_ADVERTS: AdvertItem[] = [
@@ -176,6 +182,7 @@ const DEFAULT_STATE: AppState = {
       image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800"
     },
     adverts: DEFAULT_ADVERTS,
+    posters: DEFAULT_POSTERS,
     newsletter: DEFAULT_NEWSLETTER,
     contact: {
       address: "12 Industrial Way, Isando, Johannesburg, 1600, South Africa",
@@ -322,6 +329,7 @@ export const loadState = (): AppState => {
         state.config.theme = { ...DEFAULT_STATE.config.theme, ...parsed.config.theme };
         state.config.ui = { ...DEFAULT_STATE.config.ui, ...parsed.config.ui };
         state.config.newsletter = { ...DEFAULT_STATE.config.newsletter, ...parsed.config.newsletter };
+        state.config.posters = parsed.config.posters || DEFAULT_STATE.config.posters;
       }
       
       return state;

@@ -87,6 +87,12 @@ export interface AdvertItem {
   link: string;
 }
 
+export interface PosterItem {
+  id: string;
+  image: string;
+  title: string;
+}
+
 export interface NewsletterConfig {
   title: string;
   subtitle: string;
@@ -261,6 +267,7 @@ export interface SiteConfig {
     image: string;
   };
   adverts?: AdvertItem[];
+  posters?: PosterItem[];
   newsletter: NewsletterConfig;
   contact: ContactConfig;
   legal: {
