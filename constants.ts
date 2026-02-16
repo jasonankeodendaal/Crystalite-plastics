@@ -78,44 +78,12 @@ export const MATERIALS: Material[] = [
     tags: ['Mimaki', 'UV-LED', 'Backlit', 'Hardware'],
     documents: []
   },
-  { 
-    id: 'hdw-3dp-raise3d-pro3',
-    sku: 'R3D-PRO3-PLUS',
-    name: 'Raise3D Pro3 Plus',
-    department: 'Hardware',
-    category: '3D Printer',
-    brand: 'Raise3D',
-    brandId: 'b-raise3d',
-    range: 'Pro Series',
-    rangeId: 'r-proseries',
-    modelNumber: 'Pro3 Plus',
-    density: 0,
-    tempRange: '15 to 30°C', 
-    description: 'A professional-grade large-format 3D printer featuring a dual-extruder system and an independent modular system. Designed for continuous production and rapid prototyping with high reliability and precision.',
-    features: ['Dual Extruder System', 'Interchangeable Hotends', 'Air Flow Manager with HEPA filter', 'EVE Smart Assistant'],
-    applications: ['Jigs and Fixtures', 'Functional Prototypes', 'Low Volume Production', 'Educational Models'],
-    standardSizes: ['300 x 300 x 605 mm'],
-    variants: [],
-    media: [{ url: 'https://images.unsplash.com/photo-1631282121775-58532420a324?auto=format&fit=crop&q=80&w=1200', type: 'image' }],
-    pros: ['Massive build volume', 'Highly consistent layer adhesion', 'Remote production management'],
-    cons: ['Slow build speeds for large volume prints'],
-    price: 115000,
-    pricingType: 'unit',
-    technicalSpecs: [
-      { label: 'Layer Height', value: '0.01 - 0.25mm' },
-      { label: 'Max Nozzle Temp', value: '300°C' },
-      { label: 'Build Plate Temp', value: 'Max 120°C' },
-      { label: 'Filament Diameter', value: '1.75mm' }
-    ],
-    tags: ['3D Printing', 'Industrial', 'Raise3D', 'Prototyping'],
-    documents: []
-  },
 
-  // VINYLS & MEDIA
+  // ORACAL VINYLS
   {
     id: 'vnl-ora-651-gloss',
     sku: 'OR-651-G',
-    name: 'Oracal 651 Intermediate Vinyl',
+    name: 'Oracal 651 Intermediate Cal',
     department: 'Signage Materials',
     category: 'Vinyl',
     brand: 'Oracal',
@@ -126,69 +94,87 @@ export const MATERIALS: Material[] = [
     seriesId: 's-651gloss',
     density: 0,
     tempRange: '-40 to +80°C',
-    description: 'ORACAL 651 is the industry standard for intermediate calendered vinyl. It features a 2.5 mil thickness and a 5-year outdoor durability, making it perfect for general signage, decals, and flat-surface vehicle lettering.',
-    features: ['70 Micron (2.5 mil)', 'Solvent Polyacrylate Permanent Adhesive', '60+ Vibrant Gloss Colors', 'Clear, water-based adhesive'],
-    applications: ['POB Signage', 'Flat Surface Decals', 'Retail Window Graphics', 'Exhibition Displays'],
+    description: 'The global benchmark for intermediate vinyl. 2.5 mil thickness with a 5-year outdoor durability. Ideal for flat surfaces, lettering, and medium-term signage. Features a high-gloss finish and permanent solvent polyacrylate adhesive.',
+    features: ['High dimensional stability', 'Excellent weeding properties', 'Permanent adhesive', 'UV-Resistant pigment'],
+    applications: ['Retail Window Graphics', 'Indoor/Outdoor Directional Signs', 'Flat Vehicle Lettering', 'Hobby Decals'],
     standardSizes: ['1260mm x 50m', '630mm x 50m'],
     variants: [
-      { type: 'color', value: 'Gloss White' },
-      { type: 'color', value: 'Gloss Black' },
-      { type: 'color', value: 'Transparent' }
+      { id: 'v1', type: 'color', value: 'Gloss White', skuOverride: 'OR-651-010' },
+      { id: 'v2', type: 'color', value: 'Gloss Black', skuOverride: 'OR-651-070' },
+      { id: 'v3', type: 'color', value: 'Signal Red', skuOverride: 'OR-651-031' },
+      { id: 'v4', type: 'color', value: 'Gentian Blue', skuOverride: 'OR-651-051' },
+      { id: 'v5', type: 'color', value: 'Sulfur Yellow', skuOverride: 'OR-651-021' },
+      { id: 'v6', type: 'color', value: 'Forest Green', skuOverride: 'OR-651-060' },
+      { id: 'v7', type: 'color', value: 'Silver Grey (Met)', skuOverride: 'OR-651-090', priceOverride: 215 },
+      { id: 'v8', type: 'color', value: 'Gold (Met)', skuOverride: 'OR-651-091', priceOverride: 215 }
     ],
-    media: [{ url: 'https://images.unsplash.com/photo-1626608322397-f4e507d10c73?auto=format&fit=crop&q=80&w=1200', type: 'image' }],
-    pros: ['Excellent weeding properties', 'Cost-effective for bulk signage', 'High dimensional stability'],
-    cons: ['Not suitable for deep recesses or corrugations'],
+    media: [
+      { url: 'https://images.unsplash.com/photo-1626608322397-f4e507d10c73?auto=format&fit=crop&q=80&w=1200', type: 'image' },
+      { url: 'https://images.unsplash.com/photo-1572375927902-1c0948957607?auto=format&fit=crop&q=80&w=1200', type: 'image' }
+    ],
+    pros: ['Industry standard reliability', 'Consistent color matching', 'Superior cutting response'],
+    cons: ['Not for compound curves', 'Adhesive reach full cure in 24h'],
     price: 185,
     pricingType: 'meter',
     fullRollLength: 50,
     technicalSpecs: [
       { label: 'Thickness', value: '70 micron' },
       { label: 'Outdoor Durability', value: '5 Years' },
-      { label: 'Adhesive Power', value: '18 N/25 mm' },
-      { label: 'Tensile Strength', value: '19 MPa' }
+      { label: 'Adhesive', value: 'Solvent Polyacrylate' },
+      { label: 'Release Paper', value: '137g/m²' }
     ],
-    tags: ['Oracal', 'Vinyl', 'Signage', 'Intermediate'],
+    tags: ['Oracal', 'Vinyl', 'Intermediate', 'Gloss'],
     documents: []
   },
   {
-    id: 'vnl-ora-751-gloss',
-    sku: 'OR-751-HP',
-    name: 'Oracal 751 High Performance Cast',
+    id: 'vnl-ora-970ra',
+    sku: 'OR-970RA',
+    name: 'Oracal 970RA Premium Wrapping Cast',
     department: 'Signage Materials',
-    category: 'Vinyl',
+    category: 'Wrapping Film',
     brand: 'Oracal',
     brandId: 'b-oracal',
-    range: '751 Series',
-    rangeId: 'r-751',
-    series: '751 Gloss',
-    seriesId: 's-751gloss',
+    range: '970 Series',
+    rangeId: 'r-970ra',
+    series: 'RapidAir Cast',
+    seriesId: 's-970ra',
     density: 0,
     tempRange: '-50 to +110°C',
-    description: 'A high-performance cast vinyl designed for high-quality vehicle lettering and long-term signage. It offers excellent conformability over simple curves and rivets with an 8-year outdoor life.',
-    features: ['60 Micron (2.4 mil)', 'Cast PVC Film', 'Exceptional conformability', 'Dimensional stability'],
-    applications: ['High-Quality Vehicle Lettering', 'Marine Graphics', 'Long-term Signage', 'Transportation Graphics'],
-    standardSizes: ['1260mm x 50m'],
-    variants: [],
-    media: [{ url: 'https://images.unsplash.com/photo-1626608322397-f4e507d10c73?auto=format&fit=crop&q=80&w=1200', type: 'image' }],
-    pros: ['Extended outdoor life', 'Thin profile for "painted-on" look', 'Superior weather resistance'],
-    cons: ['Higher cost than calendered vinyl'],
-    price: 325,
-    pricingType: 'meter',
-    fullRollLength: 50,
-    technicalSpecs: [
-      { label: 'Thickness', value: '60 micron' },
-      { label: 'Outdoor Durability', value: '8 Years' },
-      { label: 'Elongation', value: 'min 150%' }
+    description: 'Multi-layered high-performance cast PVC film with RapidAir technology for air-release bubble-free application. Specifically developed for full vehicle wraps and corrugated surfaces without the need for lamination.',
+    features: ['RapidAir air-release technology', 'Highly conformable', 'Repositional adhesive', 'Dual-layer pigment construction'],
+    applications: ['Full Vehicle Wraps', 'Fleet Graphics', 'Marine Graphics', 'Architectural Wrapping'],
+    standardSizes: ['1524mm x 25m'],
+    variants: [
+      { id: 'v1', type: 'color', value: 'Gloss Tangerine', skuOverride: 'OR-970RA-351' },
+      { id: 'v2', type: 'color', value: 'Gloss Azure Blue', skuOverride: 'OR-970RA-537' },
+      { id: 'v3', type: 'color', value: 'Matt Charcoal', skuOverride: 'OR-970RA-704' },
+      { id: 'v4', type: 'color', value: 'Shift Effect Pearl', skuOverride: 'OR-970RA-SE', priceOverride: 950 }
     ],
-    tags: ['Oracal', 'Vinyl', 'Cast', 'High Performance'],
+    media: [
+      { url: 'https://images.unsplash.com/photo-1614332287897-cdc485fa562d?auto=format&fit=crop&q=80&w=1200', type: 'image' }
+    ],
+    pros: ['Fast application with RapidAir', 'Extreme outdoor durability', 'High gloss "paint" finish'],
+    cons: ['Requires high-heat post-heating', 'Higher skilled labor required'],
+    price: 785,
+    pricingType: 'meter',
+    fullRollLength: 25,
+    technicalSpecs: [
+      { label: 'Thickness', value: '110 micron' },
+      { label: 'Elongation', value: 'min 150%' },
+      { label: 'Adhesive Power', value: '18 N/25mm' },
+      { label: 'Durability', value: '12 Years (Unprinted)' }
+    ],
+    tags: ['Oracal', 'Wrap', 'Cast', 'RapidAir'],
     documents: []
   },
+
+  // AVERY DENNISON VINYLS
   {
     id: 'vnl-ave-1105',
     sku: 'AD-MPI-1105-EA',
     name: 'Avery MPI 1105 Easy Apply RS',
     department: 'Signage Materials',
-    category: 'Print Media',
+    category: 'Digital Media',
     brand: 'Avery Dennison',
     brandId: 'b-avery',
     range: 'MPI 1100 Series',
@@ -197,28 +183,74 @@ export const MATERIALS: Material[] = [
     seriesId: 's-mpi1105',
     density: 0,
     tempRange: '-45 to +82°C',
-    description: 'The premier solution for vehicle wraps and demanding surfaces. Features Easy Apply RS technology for repositionability and slideability, and ultimate conformability around deep recesses and rivets.',
-    features: ['50 Micron High Gloss Cast Film', 'Easy Apply RS (Repositionable/Slideable)', 'Long-term Removability', '10 Year Durability (Unprinted)'],
-    applications: ['Full Vehicle Wraps', 'Fleet Graphics', 'Corrugated Surfaces', 'Architectural Decoration'],
+    description: 'The flagship print media for high-performance wraps. Features Easy Apply RS technology for repositionability and slideability, and ultimate conformability around deep recesses and rivets. Optimized for Eco-Solvent, UV, and Latex inks.',
+    features: ['Superior print consistency', 'Easy Apply RS (Air Egress)', 'Clean long-term removability', 'Conformable to 3D surfaces'],
+    applications: ['Full Vehicle Wraps', 'Public Transport Graphics', 'High-End Branding', 'Corrugated Shipping Containers'],
     standardSizes: ['1370mm x 50m', '1524mm x 50m'],
-    variants: [],
-    media: [{ url: 'https://images.unsplash.com/photo-1614332287897-cdc485fa562d?auto=format&fit=crop&q=80&w=1200', type: 'image' }],
-    pros: ['Unmatched application speed', 'Air egress for bubble-free finish', 'Excellent print resolution'],
-    cons: ['Requires professional installation training'],
+    variants: [
+      { id: 'v1', type: 'size', value: '1370mm Standard', skuOverride: 'MPI-1105-54' },
+      { id: 'v2', type: 'size', value: '1524mm Wide', skuOverride: 'MPI-1105-60', priceOverride: 545 }
+    ],
+    media: [
+      { url: 'https://images.unsplash.com/photo-1626608322397-f4e507d10c73?auto=format&fit=crop&q=80&w=1200', type: 'image' }
+    ],
+    pros: ['Fastest application in class', 'Vibrant color saturation', 'Bubble-free result'],
+    cons: ['Needs DOL 1460 lamination for warranty'],
     price: 495,
     pricingType: 'meter',
     fullRollLength: 50,
     technicalSpecs: [
       { label: 'Thickness', value: '50 micron' },
-      { label: 'Adhesive', value: 'Solvent Acrylic' },
-      { label: 'Durability', value: '10 Years' },
-      { label: 'Finish', value: 'Super Gloss' }
+      { label: 'Finish', value: 'High Gloss' },
+      { label: 'Adhesive', value: 'Permanent Grey Acrylic' },
+      { label: 'Durability', value: '10 Years' }
     ],
-    tags: ['Avery', 'Wrap', 'Digital Print', 'Easy Apply'],
+    tags: ['Avery', 'Digital Print', 'Wrap', 'Easy Apply'],
+    documents: []
+  },
+  {
+    id: 'vnl-ave-swf',
+    sku: 'AD-SWF',
+    name: 'Avery Supreme Wrapping Film',
+    department: 'Signage Materials',
+    category: 'Wrapping Film',
+    brand: 'Avery Dennison',
+    brandId: 'b-avery',
+    range: 'SWF Series',
+    rangeId: 'r-swf',
+    series: 'Supreme Wrap',
+    seriesId: 's-swf',
+    density: 0,
+    tempRange: '-50 to +110°C',
+    description: 'The industry favorite for color-change vehicle wraps. Combines a color film and protective layer into one construction. Features Easy Apply RS for rapid installation and long-term removability after the wrap period.',
+    features: ['Dual-layer construction', 'Over 100 color options', 'Exceptional conformability', 'Easy Apply RS technology'],
+    applications: ['High-end color changes', 'Luxury Vehicle Detailing', 'Automotive Personalization'],
+    standardSizes: ['1524mm x 25m'],
+    variants: [
+      { id: 'v1', type: 'color', value: 'Satin Black', skuOverride: 'AD-SWF-SAT-BLK' },
+      { id: 'v2', type: 'color', value: 'Gloss Rock Grey', skuOverride: 'AD-SWF-GR-GRY' },
+      { id: 'v3', type: 'color', value: 'Diamond Blue', skuOverride: 'AD-SWF-DMD-BLU', priceOverride: 980 },
+      { id: 'v4', type: 'color', value: 'ColorFlow Rising Sun', skuOverride: 'AD-SWF-CF-RS', priceOverride: 1150 }
+    ],
+    media: [
+      { url: 'https://images.unsplash.com/photo-1572375927902-1c0948957607?auto=format&fit=crop&q=80&w=1200', type: 'image' }
+    ],
+    pros: ['Fastest install time', 'Superior paint-like finish', 'Highly conformable'],
+    cons: ['Premium price point'],
+    price: 845,
+    pricingType: 'meter',
+    fullRollLength: 25,
+    technicalSpecs: [
+      { label: 'Thickness', value: '80 micron' },
+      { label: 'Adhesive', value: 'Easy Apply RS' },
+      { label: 'Durability', value: '12 Years' },
+      { label: 'Finish', value: 'Multi-Texture Available' }
+    ],
+    tags: ['Avery', 'SWF', 'Wrap', 'Color Change'],
     documents: []
   },
 
-  // RIGID SUBSTRATES
+  // ENGINEERING RIGID SUBSTRATES
   { 
     id: 'eng-lx-pc-3mm',
     sku: 'IP-LX-PC-3MM',
@@ -238,8 +270,9 @@ export const MATERIALS: Material[] = [
     applications: ['Safety Guards', 'Machine Viewing Panels', 'Anti-Vandal Glazing', 'Industrial Skylights'],
     standardSizes: ['2440 x 1220mm', '3050 x 2030mm'],
     variants: [
-      { type: 'thickness', value: '3mm', priceOverride: 2850 },
-      { type: 'thickness', value: '5mm', priceOverride: 4500 }
+      { id: 't1', type: 'thickness', value: '3mm', priceOverride: 2850 },
+      { id: 't2', type: 'thickness', value: '5mm', priceOverride: 4500 },
+      { id: 't3', type: 'thickness', value: '10mm', priceOverride: 8900 }
     ],
     media: [{ url: 'https://images.unsplash.com/photo-1504148455328-497c5efdf13a?auto=format&fit=crop&q=80&w=1200', type: 'image' }],
     pros: ['Incredible toughness', 'Lightweight compared to glass', 'Easy to cold-curve'],
@@ -274,8 +307,9 @@ export const MATERIALS: Material[] = [
     applications: ['Premium POS Displays', 'Skylights', 'Furniture Fabrication', 'Corporate Signage'],
     standardSizes: ['2440 x 1220mm', '3050 x 2030mm'],
     variants: [
-      { type: 'thickness', value: '3mm', priceOverride: 1450 },
-      { type: 'thickness', value: '5mm', priceOverride: 2400 }
+      { id: 't1', type: 'thickness', value: '3mm', priceOverride: 1450 },
+      { id: 't2', type: 'thickness', value: '5mm', priceOverride: 2400 },
+      { id: 't3', type: 'thickness', value: '10mm', priceOverride: 4950 }
     ],
     media: [{ url: 'https://images.unsplash.com/photo-1590483736622-39da8af75620?auto=format&fit=crop&q=80&w=1200', type: 'image' }],
     pros: ['Superior optical clarity', 'Easy to thermoform and glue', 'High surface hardness'],
@@ -289,37 +323,6 @@ export const MATERIALS: Material[] = [
         { label: 'Flexural Strength', value: '116 MPa' }
     ],
     tags: ['Acrylic', 'Perspex', 'Display', 'Clarity'],
-    documents: []
-  },
-  { 
-    id: 'eng-cd-white-06',
-    sku: 'CD-STEEL-WHITE-06',
-    name: 'Chromodeck Steel Sheet (0.6mm)', 
-    department: 'Signage Materials',
-    category: 'Metal', 
-    brand: 'Chromodeck',
-    brandId: 'b-chromodeck',
-    range: 'Steel Series',
-    rangeId: 'r-metal',
-    density: 7.85, 
-    tempRange: '-20 to +100°C', 
-    description: 'Chromodeck is a high-quality pre-painted galvanized steel sheet. It is a staple in the signage industry for rigid outdoor boards. The white finish is UV-resistant and designed for direct application of vinyl graphics.',
-    features: ['Pre-painted UV-stable white', 'Galvanized steel core', 'Rust resistant', 'Flat surface for vinyl adhesion'],
-    applications: ['Outdoor Billboard Signage', 'Construction Site Boards', 'Property Signage', 'Industrial Safety Signs'],
-    standardSizes: ['2450 x 1225mm'],
-    variants: [],
-    media: [{ url: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=1200', type: 'image' }],
-    pros: ['Extremely rigid and flat', 'Weather resistant for outdoor use', 'Cost effective for large signs'],
-    cons: ['Heavy to transport', 'Sharp edges require careful handling'],
-    price: 1150,
-    pricingType: 'unit',
-    engineeringSpecs: { length: 2450, width: 1225, thickness: 0.6, weight: 14.1 },
-    technicalSpecs: [
-      { label: 'Base Material', value: 'Galvanized Steel' },
-      { label: 'Coating', value: 'Silicone Polyester' },
-      { label: 'Salt Spray Resistance', value: '500 Hours' }
-    ],
-    tags: ['Metal', 'Steel', 'Signage', 'Rigid'],
     documents: []
   }
 ];

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AppState, Material, Inquiry, TechnicalDocument, SocialLink, MaterialMedia, Brand, Range, Series, MaterialDepartment, PricingType, RoadmapItem, DivisionConfig, Branch, HeroItem, NavItem, MaterialVariant } from '../types';
+import { AppState, Material, Inquiry, TechnicalDocument, SocialLink, MaterialMedia, Brand, Range, Series, MaterialDepartment, PricingType, RoadmapItem, DivisionConfig, Branch, HeroItem, NavItem, MaterialVariant, AdvertItem } from '../types';
 
 interface AdminDashboardProps {
   state: AppState;
@@ -18,10 +18,13 @@ const fileToBase64 = (file: File): Promise<string> => {
 };
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit }) => {
-  const [activeTab, setActiveTab] = useState<'system' | 'hero' | 'home-content' | 'vault' | 'catalog' | 'crm' | 'pages' | 'contact'>('catalog');
+  const [activeTab, setActiveTab] = useState<'system' | 'hero' | 'home-content' | 'vault' | 'catalog' | 'crm' | 'pages' | 'contact' | 'info'>('catalog');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [catalogFilter, setCatalogFilter] = useState<string>('All');
   const [selectedInquiryId, setSelectedInquiryId] = useState<string | null>(null);
+
+  // Info section verifier state
+  const [verifiedDim, setVerifiedDim] = useState<{ w: number, h: number, name: string } | null>(null);
 
   // Roadmap editing state
   const [newRoadmapItem, setNewRoadmapItem] = useState<RoadmapItem>({ year: '', event: '' });
@@ -78,6 +81,20 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
     }
   };
 
+  const handleVerifyImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        setVerifiedDim({ w: img.width, h: img.height, name: file.name });
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleBrandLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>, brandId: string) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -107,6 +124,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
       });
     }
     updateConfig('hero.items', [...state.config.hero.items, ...newItems]);
+  };
+
+  const handleAdvertImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const b64 = await fileToBase64(file);
+      const newAdverts = [...(state.config.adverts || [])];
+      newAdverts[idx].image = b64;
+      updateConfig('adverts', newAdverts);
+    }
   };
 
   const handleDeptIconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -391,33 +418,34 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
 
   const navCategories = [
     { 
-      label: 'Design & Identity', 
+      label: 'Identity', 
       tabs: ['system', 'contact'] 
     },
     { 
-      label: 'Content & Pages', 
+      label: 'Content', 
       tabs: ['hero', 'home-content', 'pages'] 
     },
     { 
-      label: 'Product Engine', 
+      label: 'Product', 
       tabs: ['vault', 'catalog'] 
     },
     { 
       label: 'Operations', 
-      tabs: ['crm'] 
+      tabs: ['crm', 'info'] 
     }
   ];
 
   const getTabLabel = (t: string) => {
     switch(t) {
-      case 'vault': return 'DNA Hierarchy';
-      case 'system': return 'Branding';
+      case 'vault': return 'DNA';
+      case 'system': return 'Brand';
       case 'hero': return 'Carousel';
       case 'home-content': return 'Sections';
-      case 'contact': return 'National HQ';
-      case 'crm': return 'Leads & CRM';
-      case 'catalog': return 'Materials';
+      case 'contact': return 'HQ';
+      case 'crm': return 'Leads';
+      case 'catalog': return 'Catalog';
       case 'pages': return 'Subpages';
+      case 'info': return 'Specs';
       default: return t;
     }
   };
@@ -432,30 +460,45 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
     </div>
   );
 
+  const IMAGE_SPECS = [
+    { label: 'Global Site Logo', target: 'Header & Brand', dimensions: '256 x 256 px', ratio: '1:1 (Square)', notes: 'Transparent SVG or PNG preferred' },
+    { label: 'Home Hero Sequence', target: 'Homepage Slide', dimensions: '1920 x 1080 px', ratio: '16:9', notes: 'Maintain high contrast for readability' },
+    { label: 'Logistics Grid', target: 'Landing Page Hub', dimensions: '2000 x 1200 px', ratio: '5:3', notes: 'Optimized for wide-format backgrounds' },
+    { label: 'Advert Strip Items', target: 'Promo Banner', dimensions: '1600 x 400 px', ratio: '4:1', notes: 'Panoramic wide orientation' },
+    { label: 'Division Glyph / Icon', target: 'Service Nodes', dimensions: '128 x 128 px', ratio: '1:1', notes: 'Flat vector or high-res PNG' },
+    { label: 'Division Hero Media', target: 'Category Landing', dimensions: '1920 x 800 px', ratio: '~21:9', notes: 'Wide cinematic feel' },
+    { label: 'Partner Brand Logos', target: 'Marquee / About', dimensions: '600 x 300 px', ratio: '2:1', notes: 'Transparency is critical' },
+    { label: 'Technical Range Visuals', target: 'Product Range', dimensions: '1600 x 900 px', ratio: '16:9', notes: 'Authorized manufacturer data' },
+    { label: 'Primary Profile Image', target: 'Product Detail', dimensions: '1200 x 900 px', ratio: '4:3', notes: 'Standard industrial specification' },
+    { label: 'Variant Precision Media', target: 'Material Swatch', dimensions: '800 x 800 px', ratio: '1:1', notes: 'Close-up texture or color focus' },
+    { label: 'Executive Heritage Asset', target: 'About / Founders', dimensions: '1200 x 800 px', ratio: '3:2', notes: 'Grayscale or high-fidelity color' },
+    { label: 'Newsletter Hub Interface', target: 'Pop-up Terminal', dimensions: '800 x 600 px', ratio: '4:3', notes: 'Background context for subscription' },
+  ];
+
   return (
     <div className="min-h-screen bg-[#080808] text-slate-300 flex flex-col font-sans">
-      <header className="h-24 bg-[#111] border-b-4 border-[var(--primary-yellow)] flex items-center justify-between px-6 sm:px-12 shrink-0 sticky top-0 z-[150] shadow-2xl">
-        <div className="flex items-center gap-6 sm:gap-16 h-full">
-          <div className="flex items-center gap-4 shrink-0 cursor-pointer" onClick={onExit}>
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[var(--primary-yellow)] flex items-center justify-center rounded-[var(--border-radius)] shadow-[0_0_20px_rgba(255,214,0,0.3)]">
-              <span className="text-black font-black text-xl sm:text-2xl">IP</span>
+      <header className="h-24 bg-[#111] border-b-4 border-[var(--primary-yellow)] flex items-center justify-between px-4 sm:px-8 shrink-0 sticky top-0 z-[150] shadow-2xl">
+        <div className="flex items-center gap-4 sm:gap-6 md:gap-10 h-full overflow-hidden">
+          <div className="flex items-center gap-3 shrink-0 cursor-pointer" onClick={onExit}>
+            <div className="w-10 h-10 bg-[var(--primary-yellow)] flex items-center justify-center rounded-[var(--border-radius)] shadow-[0_0_20px_rgba(255,214,0,0.3)]">
+              <span className="text-black font-black text-xl">IP</span>
             </div>
-            <div className="flex flex-col">
-              <h1 className="text-xs sm:text-lg font-black uppercase tracking-[0.1em] text-white leading-none">Hub <span className="text-[var(--primary-yellow)]">Forge</span></h1>
-              <span className="text-[8px] sm:text-[10px] font-black text-slate-600 uppercase tracking-widest mt-1">Admin Control Center</span>
+            <div className="hidden sm:flex flex-col">
+              <h1 className="text-sm font-black uppercase tracking-[0.1em] text-white leading-none">Hub <span className="text-[var(--primary-yellow)]">Forge</span></h1>
+              <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest mt-1">Control</span>
             </div>
           </div>
           
-          <nav className="hidden lg:flex items-center gap-8 h-full">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 h-full min-w-0">
             {navCategories.map((cat, catIdx) => (
-              <div key={catIdx} className="flex flex-col h-full justify-center relative group">
-                <span className="text-[8px] font-black text-slate-600 uppercase tracking-[0.2em] mb-1">{cat.label}</span>
+              <div key={catIdx} className="flex flex-col h-full justify-center relative group min-w-0 shrink-1">
+                <span className="text-[7px] font-black text-slate-600 uppercase tracking-[0.2em] mb-1 truncate">{cat.label}</span>
                 <div className="flex items-center gap-1">
                   {cat.tabs.map(t => (
                     <button 
                       key={t} 
                       onClick={() => setActiveTab(t as any)} 
-                      className={`px-3 py-2 flex items-center text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all rounded-md whitespace-nowrap ${activeTab === t ? 'text-black bg-[var(--primary-yellow)] shadow-lg' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                      className={`px-2 xl:px-3 py-2 flex items-center text-[10px] xl:text-[11px] font-black uppercase tracking-widest transition-all rounded-md whitespace-nowrap ${activeTab === t ? 'text-black bg-[var(--primary-yellow)] shadow-lg' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
                     >
                       {getTabLabel(t)}
                     </button>
@@ -466,7 +509,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
           </nav>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 shrink-0">
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden p-3 text-[var(--primary-yellow)] focus:outline-none bg-white/5 rounded-full border border-white/10"
@@ -480,7 +523,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
             </svg>
           </button>
           
-          <button onClick={onExit} className="bg-white text-black px-6 sm:px-10 py-3 sm:py-4 text-xs sm:text-sm font-black uppercase tracking-widest hover:bg-[var(--primary-yellow)] transition-all shadow-xl rounded-[var(--border-radius)] shrink-0 active:scale-95">Terminate Session</button>
+          <button onClick={onExit} className="bg-white text-black px-4 sm:px-6 py-3 text-xs sm:text-sm font-black uppercase tracking-widest hover:bg-[var(--primary-yellow)] transition-all shadow-xl rounded-[var(--border-radius)] shrink-0 active:scale-95">Exit</button>
         </div>
 
         {isMobileMenuOpen && (
@@ -510,6 +553,92 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
       <main className="flex-1 overflow-y-auto p-6 sm:p-12 lg:p-20 no-scrollbar">
         <div className="max-w-[1920px] mx-auto space-y-16 pb-40">
           
+          {activeTab === 'info' && (
+            <div className="space-y-12 animate-in fade-in duration-300">
+              <div className="bg-[#111] p-8 sm:p-16 border border-white/5 rounded-[var(--border-radius)] shadow-2xl">
+                <SectionHeader 
+                  title="Technical Asset Specifications" 
+                  subtitle="Authorized dimension registry and aspect ratio guide for all industrial hub visual nodes"
+                  action={
+                    <div className="flex items-center gap-4">
+                       <input type="file" accept="image/*" id="specVerifier" className="hidden" onChange={handleVerifyImage} />
+                       <button onClick={() => document.getElementById('specVerifier')?.click()} className="bg-white text-black px-8 py-3 text-xs font-black uppercase rounded-[var(--border-radius)] shadow-lg hover:bg-[var(--primary-yellow)] transition-all">Audit Local Asset Spec</button>
+                    </div>
+                  }
+                />
+
+                {verifiedDim && (
+                  <div className="mb-12 p-8 bg-[var(--primary-yellow)]/10 border-l-8 border-[var(--primary-yellow)] rounded-r-[var(--border-radius)] flex flex-col sm:flex-row justify-between items-center gap-6 animate-in slide-in-from-top-4">
+                     <div className="space-y-2 text-center sm:text-left">
+                        <p className="text-[10px] font-black uppercase text-[var(--primary-yellow)] tracking-[0.4em]">LIVE_ASSET_DIAGNOSTICS</p>
+                        <h4 className="text-xl font-black text-white uppercase truncate max-w-sm">{verifiedDim.name}</h4>
+                     </div>
+                     <div className="flex gap-10">
+                        <div className="text-center">
+                           <p className="text-[10px] font-black uppercase text-slate-500 mb-1">Pixel Width</p>
+                           <p className="text-3xl font-black text-white">{verifiedDim.w} <span className="text-xs">PX</span></p>
+                        </div>
+                        <div className="text-center">
+                           <p className="text-[10px] font-black uppercase text-slate-500 mb-1">Pixel Height</p>
+                           <p className="text-3xl font-black text-white">{verifiedDim.h} <span className="text-xs">PX</span></p>
+                        </div>
+                        <div className="text-center hidden md:block">
+                           <p className="text-[10px] font-black uppercase text-slate-500 mb-1">Est. Aspect</p>
+                           <p className="text-3xl font-black text-[var(--primary-yellow)]">{(verifiedDim.w / verifiedDim.h).toFixed(2)}</p>
+                        </div>
+                     </div>
+                     <button onClick={() => setVerifiedDim(null)} className="text-slate-500 hover:text-white font-black text-2xl">&times;</button>
+                  </div>
+                )}
+
+                <div className="overflow-x-auto no-scrollbar">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-black/40 text-[10px] font-black uppercase text-slate-600 tracking-[0.4em]">
+                       <tr>
+                         <th className="px-8 py-6 border-b border-white/5">Asset Category</th>
+                         <th className="px-8 py-6 border-b border-white/5">Primary Hub Location</th>
+                         <th className="px-8 py-6 border-b border-white/5">Recommended Px Spec</th>
+                         <th className="px-8 py-6 border-b border-white/5">Aspect Ratio</th>
+                         <th className="px-8 py-6 border-b border-white/5">Technical Notes</th>
+                       </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/[0.03]">
+                      {IMAGE_SPECS.map((spec, i) => (
+                        <tr key={i} className="group hover:bg-white/[0.02] transition-colors">
+                          <td className="px-8 py-6">
+                            <p className="text-sm font-black text-white uppercase tracking-tight group-hover:text-[var(--primary-yellow)] transition-colors">{spec.label}</p>
+                          </td>
+                          <td className="px-8 py-6">
+                            <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">{spec.target}</span>
+                          </td>
+                          <td className="px-8 py-6">
+                            <p className="text-[11px] font-mono font-black text-[var(--primary-yellow)]">{spec.dimensions}</p>
+                          </td>
+                          <td className="px-8 py-6">
+                            <p className="text-[11px] font-black uppercase text-slate-300">{spec.ratio}</p>
+                          </td>
+                          <td className="px-8 py-6">
+                            <p className="text-[10px] font-medium italic text-slate-500 group-hover:text-slate-400">{spec.notes}</p>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-16 p-10 bg-black/40 border border-white/5 rounded-[var(--border-radius)] flex flex-col md:flex-row items-center justify-between gap-8">
+                   <div className="max-w-2xl text-center md:text-left space-y-2">
+                      <h5 className="text-sm font-black uppercase text-white tracking-[0.2em]">Asset Quality Protocol</h5>
+                      <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                        Uploading assets outside of these recommended parameters may result in suboptimal hub visualization, including unwanted cropping, pixelation on retina displays, or layout distortion. Always verify master roll imagery and hardware visuals against this DNA specification registry.
+                      </p>
+                   </div>
+                   <div className="text-[var(--primary-yellow)] text-6xl opacity-10 font-black tracking-tighter hidden sm:block">SPEC_HUB</div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'hero' && (
             <div className="space-y-12 animate-in fade-in duration-300">
               <div className="bg-[#111] p-8 sm:p-16 border border-white/5 rounded-[var(--border-radius)] shadow-2xl">
@@ -640,58 +769,190 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                    </section>
                  </div>
 
-                 <div className="mt-20 pt-16 border-t-2 border-white/5">
-                   <SectionHeader title="Technical Form Logic" subtitle="Manage lead capture triggers and automated dispatch categories" />
-                   
-                   <div className="grid lg:grid-cols-2 gap-16">
-                     <div className="space-y-10">
-                       <h4 className="text-sm font-black uppercase text-slate-500 tracking-[0.2em]">Interface Alerts & Notices</h4>
-                       <div className="bg-black/40 p-8 sm:p-12 space-y-8 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
-                         <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Technical Portal Header</label>
-                            <input className="w-full bg-black border border-white/10 p-4 text-sm text-white font-black rounded-md outline-none" value={state.config.ui.formNoticeHeading} onChange={e => updateConfig('ui.formNoticeHeading', e.target.value)} />
-                         </div>
-                         <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Rapid-Response Hotline Header</label>
-                            <input className="w-full bg-black border border-white/10 p-4 text-sm text-[var(--primary-yellow)] font-black rounded-md outline-none" value={state.config.ui.emergencyHeading} onChange={e => updateConfig('ui.emergencyHeading', e.target.value)} />
-                         </div>
-                         <div className="space-y-3">
-                            <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Global Fulfillment Disclaimer</label>
-                            <textarea className="w-full bg-black border border-white/10 p-4 text-sm text-slate-400 h-32 rounded-md outline-none leading-relaxed" value={state.config.ui.inventoryNote} onChange={e => updateConfig('ui.inventoryNote', e.target.value)} />
-                         </div>
-                       </div>
-                     </div>
-
-                     <div className="space-y-10">
-                       <h4 className="text-sm font-black uppercase text-slate-500 tracking-[0.2em]">Inquiry Classification Registry</h4>
-                       <div className="bg-black/40 p-8 sm:p-12 space-y-6 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
-                         <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-4">Define active lead categories for technical dispatch routing</p>
-                         <div className="space-y-4 max-h-[450px] overflow-y-auto no-scrollbar pr-2">
-                           {state.config.ui.inquiryTypes.map((type, idx) => (
-                             <div key={idx} className="flex gap-4 items-center bg-black/60 p-4 border border-white/10 rounded-md group hover:border-[var(--primary-yellow)] transition-all">
-                               <input 
-                                 className="flex-1 bg-transparent text-sm font-black text-white p-2 border-b border-transparent focus:border-[var(--primary-yellow)] outline-none" 
-                                 value={type} 
-                                 onChange={e => {
-                                   const newTypes = [...state.config.ui.inquiryTypes];
-                                   newTypes[idx] = e.target.value;
-                                   updateConfig('ui.inquiryTypes', newTypes);
-                                 }} 
-                               />
-                               <button onClick={() => {
-                                 const newTypes = state.config.ui.inquiryTypes.filter((_, i) => i !== idx);
-                                 updateConfig('ui.inquiryTypes', newTypes);
-                               }} className="text-red-900 font-black text-2xl px-3 hover:text-red-500 transition-colors">&times;</button>
+                 {/* CONVERSION & ADVERTISING Section */}
+                 <div className="mt-20 pt-16 border-t-2 border-white/5 space-y-20">
+                    <SectionHeader title="Conversion & Broadcast Management" subtitle="Refine promotional assets and newsletter subscriber triggers" />
+                    
+                    <div className="grid lg:grid-cols-1 gap-16">
+                       {/* Newsletter Manager */}
+                       <section className="space-y-10">
+                          <div className="flex items-center gap-4 mb-2">
+                             <div className="w-8 h-8 bg-blue-600 rounded-sm"></div>
+                             <h4 className="text-sm font-black uppercase text-slate-400 tracking-[0.2em]">Newsletter Sync Configuration</h4>
+                          </div>
+                          <div className="bg-black/40 p-8 sm:p-12 space-y-12 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
+                             <div className="grid md:grid-cols-2 gap-12">
+                                <div className="space-y-8">
+                                   <div className="space-y-3">
+                                      <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Lead Terminal Title</label>
+                                      <input className="w-full bg-black border border-white/10 p-4 text-sm text-white font-black rounded-md outline-none" value={state.config.newsletter.title} onChange={e => updateConfig('newsletter.title', e.target.value)} />
+                                   </div>
+                                   <div className="space-y-3">
+                                      <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Operational Subtext</label>
+                                      <textarea className="w-full bg-black border border-white/10 p-4 text-sm text-slate-400 h-24 rounded-md outline-none leading-relaxed" value={state.config.newsletter.subtitle} onChange={e => updateConfig('newsletter.subtitle', e.target.value)} />
+                                   </div>
+                                   <div className="space-y-3">
+                                      <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Call-To-Action Button</label>
+                                      <input className="w-full bg-black border border-white/10 p-4 text-sm text-white rounded-md outline-none" value={state.config.newsletter.buttonText} onChange={e => updateConfig('newsletter.buttonText', e.target.value)} />
+                                   </div>
+                                </div>
+                                <div className="space-y-8">
+                                   <div className="space-y-3">
+                                      <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Success State Headline</label>
+                                      <input className="w-full bg-black border border-white/10 p-4 text-sm text-green-500 font-black rounded-md outline-none" value={state.config.newsletter.successTitle} onChange={e => updateConfig('newsletter.successTitle', e.target.value)} />
+                                   </div>
+                                   <div className="space-y-3">
+                                      <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Success Confirmation Text</label>
+                                      <input className="w-full bg-black border border-white/10 p-4 text-sm text-white rounded-md outline-none" value={state.config.newsletter.successSubtitle} onChange={e => updateConfig('newsletter.successSubtitle', e.target.value)} />
+                                   </div>
+                                   <div className="space-y-3">
+                                      <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Compliance Footer Notice</label>
+                                      <input className="w-full bg-black border border-white/10 p-4 text-xs text-slate-500 rounded-md outline-none" value={state.config.newsletter.footerText} onChange={e => updateConfig('newsletter.footerText', e.target.value)} />
+                                   </div>
+                                </div>
                              </div>
-                           ))}
-                           <button onClick={() => {
-                             const newTypes = [...state.config.ui.inquiryTypes, 'New Technical Category'];
-                             updateConfig('ui.inquiryTypes', newTypes);
-                           }} className="w-full text-xs font-black uppercase text-[var(--primary-yellow)] border-2 border-dashed border-[var(--primary-yellow)]/30 py-6 rounded-md hover:bg-[var(--primary-yellow)]/5 transition-all">Add Inquiry Classification +</button>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
+                             <div className="pt-8 border-t border-white/10">
+                                <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest block mb-4">Promotional Interface Visual</label>
+                                <div className="flex flex-col sm:flex-row gap-10 items-center">
+                                   <div className="w-48 h-32 bg-black border border-white/10 rounded-md overflow-hidden shrink-0 shadow-inner">
+                                      <img src={state.config.newsletter.image} className="w-full h-full object-cover grayscale" alt="Newsletter" />
+                                   </div>
+                                   <div className="flex-1 space-y-4">
+                                      <input type="file" id="newsletterImageUpload" className="hidden" onChange={e => handleFileUpload(e, 'newsletter.image')} />
+                                      <button onClick={() => document.getElementById('newsletterImageUpload')?.click()} className="bg-white text-black px-8 py-3 text-xs font-black uppercase hover:bg-[var(--primary-yellow)] transition-all rounded-md shadow-lg">Replace Interface Asset</button>
+                                      <p className="text-[9px] text-slate-600 uppercase italic">Industrial high-fidelity background image (16:9 recommended)</p>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </section>
+
+                       {/* Advertising Manager */}
+                       <section className="space-y-10">
+                          <div className="flex justify-between items-center mb-2">
+                             <div className="flex items-center gap-4">
+                                <div className="w-8 h-8 bg-red-600 rounded-sm"></div>
+                                <h4 className="text-sm font-black uppercase text-slate-400 tracking-[0.2em]">Advert Strip Sequences</h4>
+                             </div>
+                             <button onClick={() => {
+                               const newAd: AdvertItem = { id: crypto.randomUUID(), title: 'New Strategic Offer', ctaText: 'Inquire Now', image: '', link: 'catalog' };
+                               updateConfig('adverts', [...(state.config.adverts || []), newAd]);
+                             }} className="bg-white text-black px-6 py-2 text-[10px] font-black uppercase rounded hover:bg-[var(--primary-yellow)] transition-all shadow-lg">Inject Advert +</button>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                             {(state.config.adverts || []).map((ad, idx) => (
+                                <div key={ad.id} className="bg-black/40 border border-white/5 rounded-[var(--border-radius)] overflow-hidden flex flex-col group shadow-xl">
+                                   <div className="h-40 relative bg-black border-b border-white/5 group-hover:bg-white/5 transition-colors">
+                                      {ad.image ? (
+                                        <img src={ad.image} className="w-full h-full object-cover opacity-40 group-hover:opacity-60 grayscale transition-all" />
+                                      ) : (
+                                        <div className="h-full flex items-center justify-center text-[10px] font-black uppercase text-slate-800 tracking-widest">No Visual Asset</div>
+                                      )}
+                                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-sm">
+                                         <input type="file" id={`adImage-${idx}`} className="hidden" onChange={e => handleAdvertImageUpload(e, idx)} />
+                                         <button onClick={() => document.getElementById(`adImage-${idx}`)?.click()} className="bg-white text-black px-6 py-2 text-[9px] font-black uppercase rounded shadow-lg mr-2">Replace Image</button>
+                                         <button onClick={() => {
+                                           const newAds = [...(state.config.adverts || [])];
+                                           newAds.splice(idx, 1);
+                                           updateConfig('adverts', newAds);
+                                         }} className="bg-red-900 text-white px-6 py-2 text-[9px] font-black uppercase rounded shadow-lg">Terminate</button>
+                                      </div>
+                                   </div>
+                                   <div className="p-8 space-y-4">
+                                      <div className="space-y-1">
+                                         <label className="text-[9px] font-black uppercase text-slate-600 tracking-widest">Broadcast Headline</label>
+                                         <input className="w-full bg-black border border-white/10 p-3 text-sm text-white font-black rounded outline-none" value={ad.title} onChange={e => {
+                                           const newAds = [...(state.config.adverts || [])];
+                                           newAds[idx].title = e.target.value;
+                                           updateConfig('adverts', newAds);
+                                         }} />
+                                      </div>
+                                      <div className="grid grid-cols-2 gap-4">
+                                         <div className="space-y-1">
+                                            <label className="text-[9px] font-black uppercase text-slate-600 tracking-widest">CTA Label</label>
+                                            <input className="w-full bg-black border border-white/10 p-3 text-[11px] text-[var(--primary-yellow)] font-black rounded outline-none" value={ad.ctaText} onChange={e => {
+                                              const newAds = [...(state.config.adverts || [])];
+                                              newAds[idx].ctaText = e.target.value;
+                                              updateConfig('adverts', newAds);
+                                            }} />
+                                         </div>
+                                         <div className="space-y-1">
+                                            <label className="text-[9px] font-black uppercase text-slate-600 tracking-widest">Navigation Link</label>
+                                            <select className="w-full bg-black border border-white/10 p-3 text-[11px] text-white rounded outline-none appearance-none cursor-pointer" value={ad.link} onChange={e => {
+                                               const newAds = [...(state.config.adverts || [])];
+                                               newAds[idx].link = e.target.value;
+                                               updateConfig('adverts', newAds);
+                                            }}>
+                                               <option value="catalog">Full Catalog</option>
+                                               <option value="contact">Contact HQ</option>
+                                               <option value="about">About Hub</option>
+                                               {Object.keys(state.config.divisions).map(dept => (
+                                                  <option key={dept} value={`dept:${dept}`}>{dept}</option>
+                                               ))}
+                                            </select>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                             ))}
+                          </div>
+                       </section>
+                    </div>
+
+                    <div className="pt-16 border-t-2 border-white/5">
+                      <SectionHeader title="Technical Form Logic" subtitle="Manage lead capture triggers and automated dispatch categories" />
+                      
+                      <div className="grid lg:grid-cols-2 gap-16">
+                        <div className="space-y-10">
+                          <h4 className="text-sm font-black uppercase text-slate-500 tracking-[0.2em]">Interface Alerts & Notices</h4>
+                          <div className="bg-black/40 p-8 sm:p-12 space-y-8 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
+                            <div className="space-y-3">
+                               <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Technical Portal Header</label>
+                               <input className="w-full bg-black border border-white/10 p-4 text-sm text-white font-black rounded-md outline-none" value={state.config.ui.formNoticeHeading} onChange={e => updateConfig('ui.formNoticeHeading', e.target.value)} />
+                            </div>
+                            <div className="space-y-3">
+                               <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Rapid-Response Hotline Header</label>
+                               <input className="w-full bg-black border border-white/10 p-4 text-sm text-[var(--primary-yellow)] font-black rounded-md outline-none" value={state.config.ui.emergencyHeading} onChange={e => updateConfig('ui.emergencyHeading', e.target.value)} />
+                            </div>
+                            <div className="space-y-3">
+                               <label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Global Fulfillment Disclaimer</label>
+                               <textarea className="w-full bg-black border border-white/10 p-4 text-sm text-slate-400 h-32 rounded-md outline-none leading-relaxed" value={state.config.ui.inventoryNote} onChange={e => updateConfig('ui.inventoryNote', e.target.value)} />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-10">
+                          <h4 className="text-sm font-black uppercase text-slate-500 tracking-[0.2em]">Inquiry Classification Registry</h4>
+                          <div className="bg-black/40 p-8 sm:p-12 space-y-6 border border-white/5 rounded-[var(--border-radius)] shadow-lg">
+                            <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-4">Define active lead categories for technical dispatch routing</p>
+                            <div className="space-y-4 max-h-[450px] overflow-y-auto no-scrollbar pr-2">
+                              {state.config.ui.inquiryTypes.map((type, idx) => (
+                                <div key={idx} className="flex gap-4 items-center bg-black/60 p-4 border border-white/10 rounded-md group hover:border-[var(--primary-yellow)] transition-all">
+                                  <input 
+                                    className="flex-1 bg-transparent text-sm font-black text-white p-2 border-b border-transparent focus:border-[var(--primary-yellow)] outline-none" 
+                                    value={type} 
+                                    onChange={e => {
+                                      const newTypes = [...state.config.ui.inquiryTypes];
+                                      newTypes[idx] = e.target.value;
+                                      updateConfig('ui.inquiryTypes', newTypes);
+                                    }} 
+                                  />
+                                  <button onClick={() => {
+                                    const newTypes = state.config.ui.inquiryTypes.filter((_, i) => i !== idx);
+                                    updateConfig('ui.inquiryTypes', newTypes);
+                                  }} className="text-red-900 font-black text-2xl px-3 hover:text-red-500 transition-colors">&times;</button>
+                                </div>
+                              ))}
+                              <button onClick={() => {
+                                const newTypes = [...state.config.ui.inquiryTypes, 'New Technical Category'];
+                                updateConfig('ui.inquiryTypes', newTypes);
+                              }} className="w-full text-xs font-black uppercase text-[var(--primary-yellow)] border-2 border-dashed border-[var(--primary-yellow)]/30 py-6 rounded-md hover:bg-[var(--primary-yellow)]/5 transition-all">Add Inquiry Classification +</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                  </div>
                </div>
             </div>

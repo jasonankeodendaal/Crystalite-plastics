@@ -1,4 +1,5 @@
-import { AppState, Inquiry, Material, HeroItem, Brand, Range, Series, MaterialDepartment } from './types';
+
+import { AppState, Inquiry, Material, HeroItem, Brand, Range, Series, MaterialDepartment, AdvertItem, NewsletterConfig } from './types';
 import { BRANCHES, MATERIALS } from './constants';
 import { supabase } from './services/supabase';
 
@@ -71,6 +72,40 @@ const DEFAULT_HERO: HeroItem[] = [
   }
 ];
 
+const DEFAULT_ADVERTS: AdvertItem[] = [
+  {
+    id: 'ad-1',
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1200',
+    title: 'Flash Sale: 20% Off Lexan 3mm Sheets',
+    ctaText: 'Shop Sale',
+    link: 'dept:Engineering Materials'
+  },
+  {
+    id: 'ad-2',
+    image: 'https://images.unsplash.com/photo-1626608322397-f4e507d10c73?auto=format&fit=crop&q=80&w=1200',
+    title: 'New Arrival: Oracal 970RA Metallic Series',
+    ctaText: 'View Series',
+    link: 'dept:Signage Materials'
+  },
+  {
+    id: 'ad-3',
+    image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&q=80&w=1200',
+    title: 'Hardware Upgrade: Trade-in Your Old Printer',
+    ctaText: 'Request Quote',
+    link: 'contact'
+  }
+];
+
+const DEFAULT_NEWSLETTER: NewsletterConfig = {
+  title: "Technical Digest",
+  subtitle: "Subscribe to our national inventory replenishment reports and material alerts.",
+  image: "https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&q=80&w=800",
+  buttonText: "Initialize Subscription",
+  successTitle: "Deployment Successful.",
+  successSubtitle: "You are now synchronized.",
+  footerText: "Authorized data access only. Unsubscribe via portal registry."
+};
+
 const DEFAULT_PRIVACY = `At INDUSTRIAL PLASTICS DISTRIBUTORS, we understand the critical nature of the engineering data and technical inquiries shared with us. This policy outlines our commitment to protecting your corporate and personal information.
 
 1. Information Collection
@@ -140,6 +175,8 @@ const DEFAULT_STATE: AppState = {
       text: "Our core strategy is built on material reliability. We don't just supply stock; we provide the technical ecosystem required for high-stakes industrial production.",
       image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800"
     },
+    adverts: DEFAULT_ADVERTS,
+    newsletter: DEFAULT_NEWSLETTER,
     contact: {
       address: "12 Industrial Way, Isando, Johannesburg, 1600, South Africa",
       email: "logistics@industrialplastics.example.com",

@@ -73,6 +73,24 @@ export interface HeroItem {
   button2Text: string;
 }
 
+export interface AdvertItem {
+  id: string;
+  image: string;
+  title: string;
+  ctaText: string;
+  link: string;
+}
+
+export interface NewsletterConfig {
+  title: string;
+  subtitle: string;
+  image: string;
+  buttonText: string;
+  successTitle: string;
+  successSubtitle: string;
+  footerText: string;
+}
+
 export interface SocialLink {
   id: string;
   name: string;
@@ -235,6 +253,8 @@ export interface SiteConfig {
     text: string;
     image: string;
   };
+  adverts?: AdvertItem[];
+  newsletter: NewsletterConfig;
   contact: ContactConfig;
   legal: {
     vatNumber: string;

@@ -14,6 +14,8 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import AdminDashboard from './components/AdminDashboard';
 import BrandCarousel from './components/BrandCarousel';
 import PlexusBackground from './components/PlexusBackground';
+import AdvertStrip from './components/AdvertStrip';
+import NewsletterPopup from './components/NewsletterPopup';
 import { loadState, saveState, addInquiry } from './stateManager';
 import { Material, AppState } from './types';
 
@@ -24,7 +26,7 @@ const App: React.FC = () => {
   const [view, setView] = useState<View>('home');
   const [selectedProduct, setSelectedProduct] = useState<Material | null>(null);
   const [inquirySubject, setInquirySubject] = useState<string>('');
-  const [activeModal, setActiveModal] = useState<'privacy' | 'social' | null>(null);
+  const [activeModal, setActiveModal] = useState<'privacy' | 'social' | 'newsletter' | null>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [logisticsIdx, setLogisticsIdx] = useState(0);
 
@@ -38,9 +40,19 @@ const App: React.FC = () => {
     };
     window.addEventListener('mousedown', handleInteraction);
     window.addEventListener('keydown', handleInteraction);
+    
+    // Auto-show newsletter after 5 seconds if not home
+    const newsletterTimer = setTimeout(() => {
+        const dismissed = localStorage.getItem('newsletter_dismissed');
+        if (!dismissed) {
+            setActiveModal('newsletter');
+        }
+    }, 5000);
+
     return () => {
       window.removeEventListener('mousedown', handleInteraction);
       window.removeEventListener('keydown', handleInteraction);
+      clearTimeout(newsletterTimer);
     };
   }, []);
 
@@ -98,6 +110,11 @@ const App: React.FC = () => {
 
     setSelectedProduct(activeCollection[nextIndex]);
     window.scrollTo(0, 0);
+  };
+
+  const dismissNewsletter = () => {
+    localStorage.setItem('newsletter_dismissed', 'true');
+    setActiveModal(null);
   };
 
   if (view === 'admin') {
@@ -185,6 +202,11 @@ const App: React.FC = () => {
             <BrandCarousel brands={appState.brands} />
 
             <FoundersSection config={appState.config.founders} />
+
+            {appState.config.adverts && (
+              <AdvertStrip adverts={appState.config.adverts} onNavigate={v => { setView(v); window.scrollTo(0,0); }} />
+            )}
+
             <Services 
               config={appState.config.divisions}
               uiTitle={appState.config.ui.servicesTitle}
@@ -256,6 +278,13 @@ const App: React.FC = () => {
         <Modal title="Data Protection Commitment" onClose={() => setActiveModal(null)}>
           <PrivacyPolicy content={appState.config.privacyPolicy} />
         </Modal>
+      )}
+
+      {activeModal === 'newsletter' && (
+        <NewsletterPopup 
+          config={appState.config.newsletter}
+          onClose={dismissNewsletter} 
+        />
       )}
 
       <Footer 
