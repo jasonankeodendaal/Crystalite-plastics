@@ -296,12 +296,34 @@ const DEFAULT_STATE: AppState = {
   series: DEFAULT_SERIES
 };
 
+// Deep merge utility to safely handle state migrations
+const deepMerge = (target: any, source: any) => {
+  for (const key of Object.keys(source)) {
+    if (source[key] instanceof Object && key in target) {
+      Object.assign(source[key], deepMerge(target[key], source[key]));
+    }
+  }
+  Object.assign(target || {}, source);
+  return target;
+};
+
 export const loadState = (): AppState => {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      return parsed;
+      // Ensure all top-level keys exist and merge with defaults to prevent crashes
+      const state = { ...DEFAULT_STATE, ...parsed };
+      state.config = { ...DEFAULT_STATE.config, ...parsed.config };
+      
+      // Deep merge nested objects like theme, ui, etc.
+      if (parsed.config) {
+        state.config.theme = { ...DEFAULT_STATE.config.theme, ...parsed.config.theme };
+        state.config.ui = { ...DEFAULT_STATE.config.ui, ...parsed.config.ui };
+        state.config.newsletter = { ...DEFAULT_STATE.config.newsletter, ...parsed.config.newsletter };
+      }
+      
+      return state;
     } catch (e) {
       console.error("Failed to parse saved state", e);
     }

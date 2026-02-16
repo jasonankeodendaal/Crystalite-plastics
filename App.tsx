@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -30,6 +30,12 @@ const App: React.FC = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
   const [logisticsIdx, setLogisticsIdx] = useState(0);
 
+  // Use a ref to track current view in effects without triggering re-runs
+  const viewRef = useRef<View>(view);
+  useEffect(() => {
+    viewRef.current = view;
+  }, [view]);
+
   const [activeCollection, setActiveCollection] = useState<Material[]>([]);
 
   useEffect(() => {
@@ -41,10 +47,12 @@ const App: React.FC = () => {
     window.addEventListener('mousedown', handleInteraction);
     window.addEventListener('keydown', handleInteraction);
     
-    // Auto-show newsletter after 5 seconds if not home
+    // Auto-show newsletter after 5 seconds ONLY if on home page
     const newsletterTimer = setTimeout(() => {
         const dismissed = localStorage.getItem('newsletter_dismissed');
-        if (!dismissed) {
+        const isHome = viewRef.current === 'home';
+        // Defensive check: only show if config is present and we are on home
+        if (!dismissed && isHome && appState.config?.newsletter) {
             setActiveModal('newsletter');
         }
     }, 5000);
@@ -54,18 +62,25 @@ const App: React.FC = () => {
       window.removeEventListener('keydown', handleInteraction);
       clearTimeout(newsletterTimer);
     };
-  }, []);
+  }, [appState.config?.newsletter]); // Dependency on config to ensure it's loaded
 
   useEffect(() => {
     saveState(appState);
     const r = document.documentElement;
-    r.style.setProperty('--primary-yellow', appState.config.theme.primaryColor);
-    r.style.setProperty('--industrial-bg', appState.config.theme.industrialBg);
-    r.style.setProperty('--border-radius', appState.config.theme.borderRadius);
-    r.style.setProperty('--border-weight', appState.config.theme.borderWeight);
-    document.title = appState.config.seo.pageTitle;
+    // Defensive access to config theme properties
+    const theme = appState.config?.theme;
+    if (theme) {
+      r.style.setProperty('--primary-yellow', theme.primaryColor || '#FFD600');
+      r.style.setProperty('--industrial-bg', theme.industrialBg || '#111111');
+      r.style.setProperty('--border-radius', theme.borderRadius || '12px');
+      r.style.setProperty('--border-weight', theme.borderWeight || '4px');
+      document.body.style.backgroundColor = theme.industrialBg || '#111111';
+    }
     
-    document.body.style.backgroundColor = appState.config.theme.industrialBg;
+    if (appState.config?.seo?.pageTitle) {
+      document.title = appState.config.seo.pageTitle;
+    }
+    
     document.body.style.color = '#ffffff';
   }, [appState]);
 
