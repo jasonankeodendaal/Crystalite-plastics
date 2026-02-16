@@ -16,7 +16,7 @@ import BrandCarousel from './components/BrandCarousel';
 import PlexusBackground from './components/PlexusBackground';
 import AdvertStrip from './components/AdvertStrip';
 import NewsletterPopup from './components/NewsletterPopup';
-import { loadState, saveState, addInquiry } from './stateManager';
+import { loadState, saveState, addInquiry, addSubscriber } from './stateManager';
 import { Material, AppState } from './types';
 
 type View = 'home' | 'catalog' | 'admin' | 'product-detail' | 'about' | 'contact' | string;
@@ -100,6 +100,11 @@ const App: React.FC = () => {
     await addInquiry(data);
     setAppState(loadState()); 
     alert("Industrial Technical Inquiry Submitted. Our team will contact you shortly.");
+  };
+
+  const handleSubscribe = async (email: string) => {
+    await addSubscriber(email);
+    setAppState(loadState());
   };
 
   const handleSelectProduct = (product: Material, collection?: Material[]) => {
@@ -299,6 +304,7 @@ const App: React.FC = () => {
         <NewsletterPopup 
           config={appState.config.newsletter}
           onClose={dismissNewsletter} 
+          onSubscribe={handleSubscribe}
         />
       )}
 

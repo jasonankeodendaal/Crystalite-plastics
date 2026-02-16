@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AppState, Material, Inquiry, TechnicalDocument, SocialLink, MaterialMedia, Brand, Range, Series, MaterialDepartment, PricingType, RoadmapItem, DivisionConfig, Branch, HeroItem, NavItem, MaterialVariant, AdvertItem } from '../types';
+import { AppState, Material, Inquiry, TechnicalDocument, SocialLink, MaterialMedia, Brand, Range, Series, MaterialDepartment, PricingType, RoadmapItem, DivisionConfig, Branch, HeroItem, NavItem, MaterialVariant, AdvertItem, Subscriber } from '../types';
 
 interface AdminDashboardProps {
   state: AppState;
@@ -22,6 +22,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [catalogFilter, setCatalogFilter] = useState<string>('All');
   const [selectedInquiryId, setSelectedInquiryId] = useState<string | null>(null);
+  const [crmView, setCrmView] = useState<'leads' | 'subscribers'>('leads');
 
   // Info section verifier state
   const [verifiedDim, setVerifiedDim] = useState<{ w: number, h: number, name: string } | null>(null);
@@ -1484,40 +1485,74 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
             <div className="flex flex-col xl:flex-row gap-12 min-h-[85vh] xl:h-[85vh]">
                <div className="w-full xl:w-[450px] bg-[#111] border border-white/5 rounded-[var(--border-radius)] overflow-y-auto shrink-0 divide-y divide-white/5 max-h-[400px] xl:max-h-none no-scrollbar shadow-2xl">
                  <div className="p-10 bg-black/40 border-b border-white/10 sticky top-0 z-10 backdrop-blur-md">
-                   <h3 className="text-sm font-black uppercase text-[var(--primary-yellow)] tracking-[0.3em]">Master Lead Registry</h3>
-                   <div className="flex justify-between items-center mt-3">
-                      <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest">{state.inquiries.length} Strategic Inquiries</p>
-                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
+                   <h3 className="text-sm font-black uppercase text-[var(--primary-yellow)] tracking-[0.3em]">Operational Leads</h3>
+                   <div className="flex gap-2 mt-4">
+                      <button 
+                        onClick={() => setCrmView('leads')}
+                        className={`flex-1 py-2 text-[9px] font-black uppercase tracking-widest transition-all border ${crmView === 'leads' ? 'bg-[var(--primary-yellow)] text-black border-black' : 'bg-white/5 text-slate-500 border-white/10'}`}
+                      >
+                        Inquiries ({state.inquiries.length})
+                      </button>
+                      <button 
+                        onClick={() => setCrmView('subscribers')}
+                        className={`flex-1 py-2 text-[9px] font-black uppercase tracking-widest transition-all border ${crmView === 'subscribers' ? 'bg-[var(--primary-yellow)] text-black border-black' : 'bg-white/5 text-slate-500 border-white/10'}`}
+                      >
+                        Subscribers ({state.subscribers?.length || 0})
+                      </button>
                    </div>
                  </div>
-                 {state.inquiries.length > 0 ? state.inquiries.map(iq => (
-                   <button 
-                    key={iq.id} 
-                    onClick={() => setSelectedInquiryId(iq.id)} 
-                    className={`w-full text-left p-10 transition-all border-l-8 ${selectedInquiryId === iq.id ? 'bg-white/5 border-[var(--primary-yellow)] shadow-2xl' : 'border-transparent hover:bg-white/[0.03]'}`}
-                   >
-                     <div className="flex justify-between items-start mb-3 gap-4">
-                       <p className={`text-base font-black uppercase truncate flex-1 tracking-tight ${selectedInquiryId === iq.id ? 'text-white' : 'text-slate-300'}`}>{iq.fullName}</p>
-                       <span className="text-[9px] font-black bg-white/10 text-slate-500 px-3 py-1 rounded-sm uppercase shrink-0 tracking-widest">
-                         {iq.date ? new Date(iq.date).toLocaleDateString() : 'N/A'}
-                       </span>
-                     </div>
-                     <p className="text-xs font-black text-[var(--primary-yellow)] uppercase tracking-widest mb-4 opacity-80">{iq.email}</p>
-                     <div className="flex items-center gap-4 mt-2">
-                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white bg-black px-3 py-1.5 rounded-sm shrink-0 border border-white/5">
-                          {iq.type}
-                        </span>
-                        <p className="text-[10px] text-slate-600 truncate flex-1 font-black uppercase tracking-widest">{iq.message}</p>
-                     </div>
-                   </button>
-                 )) : (
-                   <div className="py-40 text-center opacity-20">
-                     <p className="text-xs font-black uppercase tracking-[0.5em]">No Strategic Leads Logged</p>
+
+                 {crmView === 'leads' ? (
+                   <>
+                     {state.inquiries.length > 0 ? state.inquiries.map(iq => (
+                       <button 
+                        key={iq.id} 
+                        onClick={() => setSelectedInquiryId(iq.id)} 
+                        className={`w-full text-left p-10 transition-all border-l-8 ${selectedInquiryId === iq.id ? 'bg-white/5 border-[var(--primary-yellow)] shadow-2xl' : 'border-transparent hover:bg-white/[0.03]'}`}
+                       >
+                         <div className="flex justify-between items-start mb-3 gap-4">
+                           <p className={`text-base font-black uppercase truncate flex-1 tracking-tight ${selectedInquiryId === iq.id ? 'text-white' : 'text-slate-300'}`}>{iq.fullName}</p>
+                           <span className="text-[9px] font-black bg-white/10 text-slate-500 px-3 py-1 rounded-sm uppercase shrink-0 tracking-widest">
+                             {iq.date ? new Date(iq.date).toLocaleDateString() : 'N/A'}
+                           </span>
+                         </div>
+                         <p className="text-xs font-black text-[var(--primary-yellow)] uppercase tracking-widest mb-4 opacity-80">{iq.email}</p>
+                         <div className="flex items-center gap-4 mt-2">
+                            <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white bg-black px-3 py-1.5 rounded-sm shrink-0 border border-white/5">
+                              {iq.type}
+                            </span>
+                            <p className="text-[10px] text-slate-600 truncate flex-1 font-black uppercase tracking-widest">{iq.message}</p>
+                         </div>
+                       </button>
+                     )) : (
+                       <div className="py-40 text-center opacity-20">
+                         <p className="text-xs font-black uppercase tracking-[0.5em]">No Strategic Leads Logged</p>
+                       </div>
+                     )}
+                   </>
+                 ) : (
+                   <div className="p-0">
+                      {(state.subscribers || []).length > 0 ? (state.subscribers || []).map(sub => (
+                        <div key={sub.id} className="p-10 border-b border-white/5 flex justify-between items-center group hover:bg-white/5 transition-all">
+                           <div className="space-y-1">
+                              <p className="text-sm font-black text-white">{sub.email}</p>
+                              <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em]">{new Date(sub.date).toLocaleString()}</p>
+                           </div>
+                           <button onClick={() => {
+                              if(confirm('Expunge subscriber?')) onUpdate({...state, subscribers: state.subscribers.filter(s => s.id !== sub.id)});
+                           }} className="text-red-900 opacity-0 group-hover:opacity-100 hover:text-red-500 font-black text-xl transition-all">&times;</button>
+                        </div>
+                      )) : (
+                        <div className="py-40 text-center opacity-20">
+                          <p className="text-xs font-black uppercase tracking-[0.5em]">Zero Subscriber Data</p>
+                        </div>
+                      )}
                    </div>
                  )}
                </div>
+
                <div className="flex-1 bg-[#111] border border-white/5 rounded-[var(--border-radius)] p-12 sm:p-20 overflow-y-auto flex flex-col no-scrollbar shadow-2xl">
-                 {selectedInquiry ? (
+                 {crmView === 'leads' && selectedInquiry ? (
                    <div className="space-y-16 animate-in fade-in duration-300">
                      <div className="flex flex-col sm:flex-row justify-between items-start border-b border-white/5 pb-12 gap-10">
                         <div className="space-y-4">
@@ -1573,6 +1608,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ state, onUpdate, onExit
                         </div>
                      </div>
                    </div>
+                 ) : crmView === 'subscribers' ? (
+                    <div className="h-full flex flex-col space-y-12 animate-in fade-in duration-300">
+                      <div className="border-b border-white/5 pb-8">
+                         <h2 className="text-4xl font-black text-white uppercase tracking-tighter">Technical Mailing Registry</h2>
+                         <p className="text-sm font-black text-slate-500 uppercase tracking-[0.3em] mt-2">Active Digital Subscriptions // National Broadcast Network</p>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {(state.subscribers || []).map(sub => (
+                          <div key={sub.id} className="bg-black/40 border border-white/5 p-8 rounded-[var(--border-radius)] shadow-xl hover:border-[var(--primary-yellow)]/30 transition-all">
+                             <div className="flex items-center gap-3 mb-4">
+                               <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                               <span className="text-[9px] font-black uppercase text-slate-600 tracking-[0.4em]">SYNC_ACTIVE</span>
+                             </div>
+                             <p className="text-xl font-black text-white mb-2">{sub.email}</p>
+                             <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Protocol ID: {sub.id.split('-')[0]}</p>
+                             <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mt-1">Registry Date: {new Date(sub.date).toLocaleDateString()}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                  ) : (
                    <div className="h-full flex flex-col items-center justify-center text-slate-800 font-black uppercase tracking-[0.6em] text-center p-12">
                      <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-10 border border-white/10">

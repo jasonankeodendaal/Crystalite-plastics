@@ -1,4 +1,10 @@
 
+export interface Subscriber {
+  id: string;
+  email: string;
+  date: string;
+}
+
 export interface Branch {
   id: string;
   name: string;
@@ -210,6 +216,7 @@ export interface AppState {
   brands: Brand[];
   ranges: Range[];
   series: Series[];
+  subscribers: Subscriber[];
 }
 
 export interface SiteConfig {

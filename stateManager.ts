@@ -1,5 +1,5 @@
 
-import { AppState, Inquiry, Material, HeroItem, Brand, Range, Series, MaterialDepartment, AdvertItem, NewsletterConfig } from './types';
+import { AppState, Inquiry, Material, HeroItem, Brand, Range, Series, MaterialDepartment, AdvertItem, NewsletterConfig, Subscriber } from './types';
 import { BRANCHES, MATERIALS } from './constants';
 import { supabase } from './services/supabase';
 
@@ -293,7 +293,8 @@ const DEFAULT_STATE: AppState = {
   inquiries: [],
   brands: DEFAULT_BRANDS,
   ranges: DEFAULT_RANGES,
-  series: DEFAULT_SERIES
+  series: DEFAULT_SERIES,
+  subscribers: []
 };
 
 // Deep merge utility to safely handle state migrations
@@ -378,6 +379,29 @@ export const addInquiry = async (inquiry: Omit<Inquiry, 'id' | 'date' | 'status'
   state.inquiries.unshift(newInquiry);
   saveState(state);
   return newInquiry;
+};
+
+export const addSubscriber = async (email: string) => {
+  const state = loadState();
+  const newSubscriber: Subscriber = {
+    id: crypto.randomUUID(),
+    email,
+    date: new Date().toISOString()
+  };
+  
+  state.subscribers.unshift(newSubscriber);
+  saveState(state);
+  
+  // Optional: Also sync to Supabase if you have a subscribers table
+  if (supabase) {
+    try {
+      await supabase.from('subscribers').insert([newSubscriber]);
+    } catch (e) {
+      console.error('Failed to sync subscriber to Supabase', e);
+    }
+  }
+  
+  return newSubscriber;
 };
 
 export const updateInquiryChat = async (inquiryId: string, message: { sender: 'user' | 'admin', text: string }) => {

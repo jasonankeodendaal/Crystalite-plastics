@@ -5,9 +5,10 @@ import { NewsletterConfig } from '../types';
 interface NewsletterPopupProps {
   config: NewsletterConfig;
   onClose: () => void;
+  onSubscribe: (email: string) => void;
 }
 
-const NewsletterPopup: React.FC<NewsletterPopupProps> = ({ config, onClose }) => {
+const NewsletterPopup: React.FC<NewsletterPopupProps> = ({ config, onClose, onSubscribe }) => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -15,7 +16,9 @@ const NewsletterPopup: React.FC<NewsletterPopupProps> = ({ config, onClose }) =>
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call
+    // Persist subscriber
+    onSubscribe(email);
+    // Simulate API delay for UI effect
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
